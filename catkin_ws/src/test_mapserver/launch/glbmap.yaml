@@ -1,4 +1,4 @@
-image: /home/sd08419/catkin_ws/src/test_mapserver/launch/glbmap.pgm
+image: /home/xxxx/catkin_ws/src/test_mapserver/launch/glbmap.pgm
 resolution: 0.050000
 origin: [-4.575000, -7.975000, 0.000000]
 negate: 0

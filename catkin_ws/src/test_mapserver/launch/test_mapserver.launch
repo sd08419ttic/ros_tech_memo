@@ -1,0 +1,7 @@
+<launch>
+        <arg name="map_file" default="/home/xxxxx/catkin_ws/src/test_mapserver/launch/glbmap.yaml"/>
+	<group ns="map_server">
+                <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+	</group>
+</launch>
+

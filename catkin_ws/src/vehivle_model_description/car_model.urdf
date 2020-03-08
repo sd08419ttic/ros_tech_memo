@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<robot name="my_robo">
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.385 0.187 0.05"/>
+      </geometry>
+      <origin xyz="0 0 0.034" rpy="0 0 0"/>
+      <material name="gray">
+        <color rgba="0.8 0.8 0.8 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.385 0.187 0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="left_front_wheel_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.034" length="0.024"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="left_front_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_front_wheel_link"/>
+    <origin rpy="-1.5707 0 0" xyz="0.128 0.105 0.034"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="left_rear_wheel_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.034" length="0.024"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="left_rear_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_rear_wheel_link"/>
+    <origin rpy="-1.5707 0 0" xyz="-0.128 0.105 0.034"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+
+  <link name="right_front_wheel_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.034" length="0.024"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+    </visual>
+  </link>
+ 
+  <joint name="right_front_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_front_wheel_link"/>
+    <origin rpy="1.5707 0 0" xyz="0.128 -0.105 0.034"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+
+  <link name="right_rear_wheel_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.034" length="0.024"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+    </visual>
+  </link>
+ 
+  <joint name="right_rear_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_rear_wheel_link"/>
+    <origin rpy="1.5707 0 0" xyz="-0.128 -0.105 0.034"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="kinect_vis">
+    <visual>
+      <geometry>
+        <box size="0.060 0.275 0.08"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="blue">
+        <color rgba="0.0 0.0 0.8 1"/>
+      </material>
+    </visual>
+  </link>
+  <joint name="kinect_vis" type="fixed">
+    <parent link="base_link"/>
+    <child link="kinect_vis"/>
+    <origin  rpy="0 0 0" xyz="0.180 0.0 0.098"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+</robot>

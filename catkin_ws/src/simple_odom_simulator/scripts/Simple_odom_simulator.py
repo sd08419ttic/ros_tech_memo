@@ -3,6 +3,7 @@
 
 import math
 import signal
+import pandas as pd
 
 # import for ros function
 import rospy
@@ -24,6 +25,9 @@ class Simple_odom_simulator():
 
         rospy.init_node('Simple_Odometry_Simlator', anonymous=True)
         r = rospy.Rate(50)  # 50hz
+
+        #Save path_plan flag
+        self.save_path_as_csv = True
 
         #Initialize odometry header
         self.odom_header = Header()
@@ -70,6 +74,10 @@ class Simple_odom_simulator():
         #set callback for ctrl and c
         signal.signal(signal.SIGINT, self.ctr_c_interruption)
 
+        if self.save_path_as_csv == True:
+            self.path_dict = {}
+
+
     ###########################
     # Bind Key board callback #
     ###########################
@@ -108,6 +116,7 @@ class Simple_odom_simulator():
             self.sim_twist.angular.z = -3.14
         elif self.sim_twist.angular.z > 3.14:
             self.sim_twist.angular.z = 3.14
+
 
     #############################################
     # Update odometry form User request cmd_vel #
@@ -173,14 +182,31 @@ class Simple_odom_simulator():
             "odom"
         )
 
+        #Save path_plan
+        if self.save_path_as_csv == True:
+            addRow = [0,self.sim_pose.position.x,self.sim_pose.position.y,0,updated_quaternion[0],updated_quaternion[1],updated_quaternion[2],updated_quaternion[3],
+                      self.sim_twist.linear.x,self.sim_twist.linear.y,self.sim_twist.linear.z,0,0,self.sim_twist.angular.z]
+            self.path_dict[len(self.path_dict)] = addRow
+            pass
+
+    ############
+    # save csv #
+    ############
+    def save_csv(self):
+        # Save CSV path file
+        cols = ["time", "x", "y", "z", "w0", "w1", "w2", "w3", "vx", "vy", "vz", "roll", "pitch", "yaw"]
+        df = pd.DataFrame.from_dict(self.path_dict, orient='index',columns=cols)
+        df.to_csv("path_data.csv", index=False)
+
+
     #######################
     # ctrl and c callabck #
     #######################
     def ctr_c_interruption(self, signum, frame):
         self.root.quit()
         self.root.update()
+        self.save_csv()
         print("finish")
-        pass
 
 if __name__ == '__main__':
     print('Simple Odometry Simulator is Started...')
@@ -188,4 +214,6 @@ if __name__ == '__main__':
     test.a.focus_set()
     test.update_odom()
     test.root.mainloop()
+    test.save_csv()
+    print("finish")
     pass

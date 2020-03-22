@@ -24,3 +24,8 @@ https://sd08419ttic.hatenablog.com/entry/2020/03/08/222908
 
 https://sd08419ttic.hatenablog.com/entry/2020/03/15/014304
 
+
+### ROS 移動ロボットの経路追従制御(Pure Pursuit)
+
+https://sd08419ttic.hatenablog.com/entry/2020/03/22/152044
+

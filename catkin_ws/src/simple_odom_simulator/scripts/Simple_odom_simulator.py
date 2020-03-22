@@ -29,6 +29,9 @@ class Simple_odom_simulator():
         #Save path_plan flag
         self.save_path_as_csv = True
 
+        #Cmd_vel receive flag (auto control)
+        self.subscribe_cmd_vel = True
+
         #Initialize odometry header
         self.odom_header = Header()
         self.odom_header.seq = 0
@@ -77,6 +80,11 @@ class Simple_odom_simulator():
         if self.save_path_as_csv == True:
             self.path_dict = {}
 
+        if self.subscribe_cmd_vel == True:
+            self.cmdvel_sub = rospy.Subscriber("/cmd_vel", Twist, self.cb_get_cmdvel_subscriber)
+            self.cmdvel_linear_x = 0.0
+            self.cmdvel_linear_y = 0.0
+            self.cmdvel_angular_z = 0.0
 
     ###########################
     # Bind Key board callback #
@@ -129,12 +137,17 @@ class Simple_odom_simulator():
         yaw_euler = e[2]
 
 
-        #update pose
-        self.sim_pose.position.x = self.sim_pose.position.x + self.sim_twist.linear.x*sampletime*math.cos(yaw_euler)
-        self.sim_pose.position.y = self.sim_pose.position.y + self.sim_twist.linear.x*sampletime*math.sin(yaw_euler)
-        updated_yaw = e[2] +self.sim_twist.angular.z*sampletime
-        updated_quaternion =tf.transformations.quaternion_from_euler(0, 0, updated_yaw)
+        #update pose from user request
+        if self.subscribe_cmd_vel == False:
+            self.sim_pose.position.x = self.sim_pose.position.x + self.sim_twist.linear.x*sampletime*math.cos(yaw_euler)
+            self.sim_pose.position.y = self.sim_pose.position.y + self.sim_twist.linear.x*sampletime*math.sin(yaw_euler)
+            updated_yaw = e[2] +self.sim_twist.angular.z*sampletime
+        else:
+            self.sim_pose.position.x = self.sim_pose.position.x + self.cmdvel_linear_x*sampletime*math.cos(yaw_euler)
+            self.sim_pose.position.y = self.sim_pose.position.y + self.cmdvel_linear_y*sampletime*math.sin(yaw_euler)
+            updated_yaw = e[2] + self.cmdvel_angular_z*sampletime
 
+        updated_quaternion =tf.transformations.quaternion_from_euler(0, 0, updated_yaw)
         self.sim_pose.orientation.x = updated_quaternion[0]
         self.sim_pose.orientation.y = updated_quaternion[1]
         self.sim_pose.orientation.z = updated_quaternion[2]
@@ -197,6 +210,16 @@ class Simple_odom_simulator():
         cols = ["time", "x", "y", "z", "w0", "w1", "w2", "w3", "vx", "vy", "vz", "roll", "pitch", "yaw"]
         df = pd.DataFrame.from_dict(self.path_dict, orient='index',columns=cols)
         df.to_csv("path_data.csv", index=False)
+
+    #####################
+    # cmdvel subscriber #
+    #####################
+    def cb_get_cmdvel_subscriber(self, msg):
+        self.cmdvel_linear_x =msg.linear.x
+        self.cmdvel_linear_y =msg.linear.x
+        self.cmdvel_angular_z =msg.angular.z
+        pass
+
 
 
     #######################

@@ -36,7 +36,7 @@ class Simple_odom_simulator():
         self.odom_header = Header()
         self.odom_header.seq = 0
         self.odom_header.stamp = rospy.Time.now()
-        self.odom_header.frame_id = "odom"
+        self.odom_header.frame_id = "map"
 
         # Initialize pose info
         self.sim_pose = Pose()
@@ -144,7 +144,7 @@ class Simple_odom_simulator():
             updated_yaw = e[2] +self.sim_twist.angular.z*sampletime
         else:
             self.sim_pose.position.x = self.sim_pose.position.x + self.cmdvel_linear_x*sampletime*math.cos(yaw_euler)
-            self.sim_pose.position.y = self.sim_pose.position.y + self.cmdvel_linear_y*sampletime*math.sin(yaw_euler)
+            self.sim_pose.position.y = self.sim_pose.position.y + self.cmdvel_linear_x*sampletime*math.sin(yaw_euler)
             updated_yaw = e[2] + self.cmdvel_angular_z*sampletime
 
         updated_quaternion =tf.transformations.quaternion_from_euler(0, 0, updated_yaw)
@@ -173,7 +173,6 @@ class Simple_odom_simulator():
         self.sim_odom.pose.pose = self.sim_pose
         self.sim_odom.twist.twist = self.sim_twist
         self.emu_odom_pub.publish(self.sim_odom)
-        self.root.after(100, self.update_odom)  #interval for gui update (100msec)
 
         #update TF
 
@@ -200,7 +199,7 @@ class Simple_odom_simulator():
             addRow = [0,self.sim_pose.position.x,self.sim_pose.position.y,0,updated_quaternion[0],updated_quaternion[1],updated_quaternion[2],updated_quaternion[3],
                       self.sim_twist.linear.x,self.sim_twist.linear.y,self.sim_twist.linear.z,0,0,self.sim_twist.angular.z]
             self.path_dict[len(self.path_dict)] = addRow
-            pass
+        self.root.after(100, self.update_odom)  #interval for gui update (100msec)
 
     ############
     # save csv #

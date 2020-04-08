@@ -29,3 +29,6 @@ https://sd08419ttic.hatenablog.com/entry/2020/03/15/014304
 
 https://sd08419ttic.hatenablog.com/entry/2020/03/22/152044
 
+### YoloV3を用いたWebカメラ画像の物体検出
+
+https://sd08419ttic.hatenablog.com/entry/2020/03/26/232403
